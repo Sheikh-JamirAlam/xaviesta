@@ -4,7 +4,7 @@ import SportsCarouselSection from "@/components/SportsCarouselSection";
 import OngoingEventsSection from "@/components/OngoingEventsSection";
 import StandingsSection from "@/components/StandingsSection";
 
-export default function Home() {
+export default function Admin() {
   return (
     <main>
       <Header />
