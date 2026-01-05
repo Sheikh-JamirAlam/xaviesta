@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function SportsCarouselClient({ slides }: Props) {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ playOnInit: true, delay: 5500 })]);
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ stopOnInteraction: false, delay: 5500 })]);
 
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
