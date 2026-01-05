@@ -1,8 +1,8 @@
 import Header from "@/components/Header";
-import EventsCarouselSection from "@/components/EventsCarouselSection";
-import SportsCarouselSection from "@/components/SportsCarouselSection";
-import OngoingEventsSection from "@/components/OngoingEventsSection";
-import StandingsSection from "@/components/StandingsSection";
+import EventsCarouselSection from "@/components/admin/EventsCarouselSection";
+import SportsCarouselSection from "@/components/admin/SportsCarouselSection";
+import OngoingEventsSection from "@/components/admin/OngoingEventsSection";
+import StandingsSection from "@/components/admin/StandingsSection";
 import { requireAdmin } from "@/lib/admin-auth";
 
 export default async function Admin() {
