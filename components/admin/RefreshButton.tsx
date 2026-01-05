@@ -12,6 +12,7 @@ export default function RefreshButton() {
 
       const res = await fetch("/api/admin/refresh-client", {
         method: "PUT",
+        cache: "no-store",
       });
 
       if (!res.ok) {

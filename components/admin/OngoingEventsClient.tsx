@@ -38,6 +38,7 @@ export default function OngoingEventsClient({ eventInfo }: { eventInfo: EventInf
         teamOne,
         teamTwo,
       }),
+      cache: "no-store",
     });
 
     setLoading(false);

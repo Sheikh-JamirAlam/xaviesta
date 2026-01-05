@@ -1,6 +1,8 @@
 import { createServerClient } from "@/lib/supabase/server";
 import StandingsClient from "./StandingsClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function StandingsSection() {
   const supabase = createServerClient();
 

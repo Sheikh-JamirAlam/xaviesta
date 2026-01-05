@@ -31,6 +31,7 @@ export default function SportsCarouselClient({ slides }: Props) {
     const res = await fetch("/api/admin/sport-images", {
       method: "POST",
       body: formData,
+      cache: "no-store",
     });
 
     setLoading(false);

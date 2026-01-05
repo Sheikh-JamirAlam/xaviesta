@@ -18,6 +18,7 @@ export default function AdminLogin() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
+      cache: "no-store",
     });
 
     if (!res.ok) {

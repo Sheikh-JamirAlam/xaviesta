@@ -31,6 +31,7 @@ export default function EventsCarouselClient({ slides }: Props) {
     const res = await fetch("/api/admin/business-images", {
       method: "POST",
       body: formData,
+      cache: "no-store",
     });
 
     setLoading(false);

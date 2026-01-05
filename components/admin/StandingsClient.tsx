@@ -47,6 +47,7 @@ export default function StandingsClient({ initialData }: { initialData: Standing
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(rows),
+      cache: "no-store",
     });
 
     setLoading(false);
