@@ -53,7 +53,7 @@ const chartConfig = {
 
 export default function StandingsSection() {
   return (
-    <div className="h-120 flex flex-col justify-center items-center">
+    <div className="h-120 flex flex-col justify-center items-center border-t border-b border-neutral-500">
       <h1 className="mb-5 font-mono text-4xl">Score</h1>
       <ChartContainer config={chartConfig} className="h-100 w-[95%]">
         <BarChart data={data} layout="vertical" margin={{ left: 40 }}>
