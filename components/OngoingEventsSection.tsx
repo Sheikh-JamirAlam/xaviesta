@@ -1,5 +1,7 @@
 import { createServerClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function OngoingEventsSection() {
   const supabase = createServerClient();
 

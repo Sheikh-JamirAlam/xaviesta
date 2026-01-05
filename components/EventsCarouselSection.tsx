@@ -1,6 +1,8 @@
 import { createServerClient } from "@/lib/supabase/server";
 import EventsCarouselClient from "./EventsCarouselClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function EventsCarouselSection() {
   const supabase = createServerClient();
 
