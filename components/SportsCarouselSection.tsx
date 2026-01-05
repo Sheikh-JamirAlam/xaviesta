@@ -1,24 +1,12 @@
-"use client";
+import { createServerClient } from "@/lib/supabase/server";
+import SportsCarouselClient from "./SportsCarouselClient";
 
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
+export default async function SportsCarouselSection() {
+  const supabase = createServerClient();
 
-const slides = Array.from(Array(5).keys());
+  const { data: images } = await supabase.storage.from("event-images").list("sports");
 
-export default function SportsCarouselSection() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ playOnInit: true, delay: 5500 })]);
+  const slides = images?.map((img) => `https://afrwytnbszqpceznbxzj.supabase.co/storage/v1/object/public/event-images/sports/${img.name}`) ?? [];
 
-  return (
-    <div>
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {slides.map((index) => (
-            <div className="min-w-0 flex-[0_0_100%]" key={index}>
-              <div className="h-110 border flex items-center justify-center bg-green-400">{index + 1}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return <SportsCarouselClient slides={slides} />;
 }
