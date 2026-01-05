@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
 
@@ -13,6 +14,7 @@ type EventInfo = {
 };
 
 export default function OngoingEventsClient({ eventInfo }: { eventInfo: EventInfo }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -42,7 +44,7 @@ export default function OngoingEventsClient({ eventInfo }: { eventInfo: EventInf
 
     if (res.ok) {
       setIsEditing(false);
-      location.reload();
+      router.refresh();
     }
   }
 
@@ -61,7 +63,7 @@ export default function OngoingEventsClient({ eventInfo }: { eventInfo: EventInf
       {/* Admin Edit Buttons */}
       <div className="absolute z-10 top-4 right-4 flex">
         {isEditing && (
-          <Button onClick={() => setIsEditing(false)} aria-label="Cancel" className="dark w-20 h-20 mr-3 hover:bg-blue-200 [&_svg:not([class*='size-'])]:size-10">
+          <Button onClick={() => setIsEditing(false)} aria-label="Cancel" className="dark w-20 h-20 mr-3 cursor-pointer hover:bg-red-200 [&_svg:not([class*='size-'])]:size-10">
             <XIcon />
           </Button>
         )}
@@ -73,7 +75,7 @@ export default function OngoingEventsClient({ eventInfo }: { eventInfo: EventInf
           }}
           aria-label="Edit"
           disabled={loading}
-          className="dark w-20 h-20 hover:bg-blue-200 [&_svg:not([class*='size-'])]:size-10"
+          className="dark w-20 h-20 cursor-pointer hover:bg-blue-200 [&_svg:not([class*='size-'])]:size-10"
         >
           {isEditing ? <CheckIcon /> : <PencilIcon />}
         </Button>

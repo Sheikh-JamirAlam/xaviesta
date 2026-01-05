@@ -4,6 +4,7 @@ import SportsCarouselSection from "@/components/admin/SportsCarouselSection";
 import OngoingEventsSection from "@/components/admin/OngoingEventsSection";
 import StandingsSection from "@/components/admin/StandingsSection";
 import { requireAdmin } from "@/lib/admin-auth";
+import RefreshButton from "@/components/admin/RefreshButton";
 
 export default async function Admin() {
   await requireAdmin();
@@ -17,8 +18,9 @@ export default async function Admin() {
         <OngoingEventsSection />
         <StandingsSection />
       </section>
-      <section className="grid grid-cols-1">
+      <section className="flex justify-center items-center gap-x-5">
         <h1 className="mt-3 text-3xl font-semibold text-center">Xaviesta Admin</h1>
+        <RefreshButton />
       </section>
     </main>
   );

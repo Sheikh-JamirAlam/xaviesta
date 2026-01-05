@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -14,10 +15,12 @@ type Props = {
 };
 
 export default function EventsCarouselClient({ slides }: Props) {
+  const router = useRouter();
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ stopOnInteraction: false, delay: 5000 })]);
 
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   async function save() {
     setLoading(true);
@@ -34,7 +37,8 @@ export default function EventsCarouselClient({ slides }: Props) {
 
     if (res.ok) {
       setFiles([]);
-      location.reload();
+      router.refresh();
+      setOpenDialog(false);
     }
   }
 
@@ -54,9 +58,15 @@ export default function EventsCarouselClient({ slides }: Props) {
 
       {/* Admin Edit Button */}
       <div className="absolute z-10 top-4 right-4">
-        <Dialog>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
-            <Button aria-label="Edit" className="dark w-20 h-20 cursor-pointer hover:bg-blue-200 [&_svg:not([class*='size-'])]:size-10">
+            <Button
+              aria-label="Edit"
+              onClick={() => {
+                setOpenDialog(true);
+              }}
+              className="dark w-20 h-20 cursor-pointer hover:bg-blue-200 [&_svg:not([class*='size-'])]:size-10"
+            >
               <PencilIcon />
             </Button>
           </DialogTrigger>

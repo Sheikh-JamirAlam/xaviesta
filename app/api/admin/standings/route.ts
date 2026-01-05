@@ -9,36 +9,71 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
-  const { data: existing } = await supabase.from("standings").select("id");
+  if (rows.some((r) => !r.name?.trim())) {
+    return NextResponse.json({ error: "Participant name required" }, { status: 400 });
+  }
 
-  const existingIds = existing?.map((r) => r.id) ?? [];
+  const { data: existing, error: fetchError } = await supabase.from("standings").select("id");
+
+  if (fetchError) {
+    console.error(fetchError);
+    return NextResponse.json({ error: "Failed to fetch standings" }, { status: 500 });
+  }
+
+  const existingIds = existing.map((r) => r.id);
   const incomingIds = rows.filter((r) => r.id).map((r) => r.id);
 
   if (existingIds.length > 0 && incomingIds.length === 0) {
-    return NextResponse.json({ error: "Incoming rows have no IDs — aborting update" }, { status: 400 });
+    return NextResponse.json({ error: "Refusing to delete all standings" }, { status: 400 });
   }
 
   const idsToDelete = existingIds.filter((id) => !incomingIds.includes(id));
 
-  if (idsToDelete.length) {
-    await supabase.from("standings").delete().in("id", idsToDelete);
+  if (idsToDelete.length > 0) {
+    const { error } = await supabase.from("standings").delete().in("id", idsToDelete);
+
+    if (error) {
+      console.error(error);
+      return NextResponse.json({ error: "Failed to delete rows" }, { status: 500 });
+    }
   }
 
-  const payload = rows.map((r) => {
-    const base = {
-      name: r.name,
-      gold: Number(r.gold),
-      silver: Number(r.silver),
-      bronze: Number(r.bronze),
-    };
-    return r.id ? { id: r.id, ...base } : base;
-  });
+  const rowsToUpdate = rows.filter((r) => r.id);
 
-  const { error } = await supabase.from("standings").upsert(payload, { onConflict: "id" });
+  if (rowsToUpdate.length > 0) {
+    const { error } = await supabase.from("standings").upsert(
+      rowsToUpdate.map((r) => ({
+        id: r.id,
+        name: r.name,
+        gold: Number(r.gold),
+        silver: Number(r.silver),
+        bronze: Number(r.bronze),
+      })),
+      { onConflict: "id" }
+    );
 
-  if (error) {
-    console.error(error);
-    return NextResponse.json({ error: "DB error" }, { status: 500 });
+    if (error) {
+      console.error(error);
+      return NextResponse.json({ error: "Failed to update rows" }, { status: 500 });
+    }
+  }
+
+  const rowsToInsert = rows.filter((r) => !r.id);
+
+  if (rowsToInsert.length > 0) {
+    const { error } = await supabase.from("standings").insert(
+      rowsToInsert.map((r) => ({
+        name: r.name,
+        gold: Number(r.gold),
+        silver: Number(r.silver),
+        bronze: Number(r.bronze),
+      }))
+    );
+
+    if (error) {
+      console.error(error);
+      return NextResponse.json({ error: "Failed to insert rows" }, { status: 500 });
+    }
   }
 
   return NextResponse.json({ success: true });

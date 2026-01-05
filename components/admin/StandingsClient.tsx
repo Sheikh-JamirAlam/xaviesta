@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -22,8 +23,10 @@ const chartConfig = {
 };
 
 export default function StandingsClient({ initialData }: { initialData: Standing[] }) {
+  const router = useRouter();
   const [rows, setRows] = useState<Standing[]>([]);
   const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   function openEditor() {
     setRows(
@@ -49,7 +52,8 @@ export default function StandingsClient({ initialData }: { initialData: Standing
     setLoading(false);
 
     if (res.ok) {
-      location.reload();
+      router.refresh();
+      setOpenDialog(false);
     }
   }
 
@@ -74,9 +78,16 @@ export default function StandingsClient({ initialData }: { initialData: Standing
 
       {/* Admin Edit Button */}
       <div className="absolute z-10 top-4 right-4">
-        <Dialog>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
-            <Button aria-label="Edit" onClick={openEditor} className="dark w-20 h-20 hover:bg-blue-200 [&_svg:not([class*='size-'])]:size-10">
+            <Button
+              aria-label="Edit"
+              onClick={() => {
+                openEditor();
+                setOpenDialog(true);
+              }}
+              className="dark w-20 h-20 cursor-pointer hover:bg-blue-200 [&_svg:not([class*='size-'])]:size-10"
+            >
               <PencilIcon />
             </Button>
           </DialogTrigger>
