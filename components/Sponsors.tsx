@@ -42,6 +42,9 @@ export default function SponsorsSection() {
       <div className="w-24 h-21 flex items-center justify-center overflow-hidden">
         <Image src="/captainlogo.png" alt="Captain Logo" width={1200} height={748} className="object-cover object-center mx-auto" />
       </div>
+      <div className="w-24 h-21 flex items-center justify-center overflow-hidden">
+        <Image src="/evereadylogo.jpg" alt="Eveready Logo" width={576} height={348} className="object-cover object-center mx-auto" />
+      </div>
     </section>
   );
 }
