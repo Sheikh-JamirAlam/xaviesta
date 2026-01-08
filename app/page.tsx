@@ -3,6 +3,7 @@ import EventsCarouselSection from "@/components/EventsCarouselSection";
 import SportsCarouselSection from "@/components/SportsCarouselSection";
 import OngoingEventsSection from "@/components/OngoingEventsSection";
 import StandingsSection from "@/components/StandingsSection";
+import SponsorsSection from "@/components/Sponsors";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <OngoingEventsSection />
         <StandingsSection />
       </section>
+      <SponsorsSection />
     </main>
   );
 }
