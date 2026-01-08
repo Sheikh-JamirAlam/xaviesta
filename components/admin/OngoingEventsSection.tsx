@@ -6,21 +6,22 @@ export const dynamic = "force-dynamic";
 export default async function OngoingEventsSection() {
   const supabase = createServerClient();
 
-  const { data, error } = await supabase.from("event_info").select("*").single();
+  const { data, error } = await supabase.from("event_info").select("*").order("position", { ascending: true });
 
-  if (error || !data) {
+  if (error || !data || data.length === 0) {
     return null;
   }
 
   return (
     <OngoingEventsClient
-      eventInfo={{
-        id: data.id,
-        event: data.event ?? "",
-        stage: data.stage ?? "",
-        team_one: data.team_one ?? "",
-        team_two: data.team_two ?? "",
-      }}
+      eventInfo={data.map((row) => ({
+        id: row.id,
+        position: row.position,
+        event: row.event ?? "",
+        stage: row.stage ?? "",
+        team_one: row.team_one ?? "",
+        team_two: row.team_two ?? "",
+      }))}
     />
   );
 }

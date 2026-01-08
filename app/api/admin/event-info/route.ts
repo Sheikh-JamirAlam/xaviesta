@@ -1,29 +1,41 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 
+type EventInfo = {
+  id: string;
+  event: string;
+  stage: string;
+  team_one: string;
+  team_two: string;
+};
+
 export async function PUT(req: Request) {
   const supabase = createServerClient();
-  const body = await req.json();
+  const body: EventInfo[] = await req.json();
 
-  const { event, stage, teamOne, teamTwo } = body;
-
-  if (!event || !stage || !teamOne || !teamTwo) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  if (!Array.isArray(body) || body.length === 0) {
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
-  const { error } = await supabase
-    .from("event_info")
-    .update({
-      event,
-      stage,
-      team_one: teamOne,
-      team_two: teamTwo,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", body.id);
+  const updates = body.map((row) =>
+    supabase
+      .from("event_info")
+      .update({
+        event: row.event,
+        stage: row.stage,
+        team_one: row.team_one,
+        team_two: row.team_two,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", row.id)
+  );
 
-  if (error) {
-    console.error(error);
+  const results = await Promise.all(updates);
+
+  const hasError = results.some((r) => r.error);
+
+  if (hasError) {
+    console.error(results.map((r) => r.error));
     return NextResponse.json({ error: "DB error" }, { status: 500 });
   }
 
