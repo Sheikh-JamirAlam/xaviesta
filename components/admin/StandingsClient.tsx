@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,17 @@ export default function StandingsClient({ initialData }: { initialData: Standing
   const [rows, setRows] = useState<Standing[]>([]);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const sortedData = useMemo(() => {
+    return [...initialData]
+      .map((item) => ({
+        ...item,
+        total: item.gold + item.silver + item.bronze,
+      }))
+      .sort((a, b) => {
+        return b.total - a.total || b.gold - a.gold || b.silver - a.silver || b.bronze - a.bronze;
+      });
+  }, [initialData]);
 
   function openEditor() {
     setRows(
@@ -64,7 +75,7 @@ export default function StandingsClient({ initialData }: { initialData: Standing
         <h1 className="mb-5 font-mono text-4xl">Score</h1>
 
         <ChartContainer config={chartConfig} className="h-100 w-[95%]">
-          <BarChart data={initialData} layout="vertical" margin={{ left: 40 }}>
+          <BarChart data={sortedData} layout="vertical" margin={{ left: 40 }}>
             <CartesianGrid horizontal={false} strokeDasharray="3 3" />
             <XAxis type="number" allowDecimals={false} />
             <YAxis type="category" dataKey="name" width={80} />
